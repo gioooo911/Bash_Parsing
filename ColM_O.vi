@@ -1,0 +1,24 @@
+# Step 1 - extract all NBCT for FSCIL:TYR=R4
+sed '/FSCIL:TYR=RN/q' INPUTFILE.txt > R4.txt
+
+# Step 2 - get Coloumn M > Variable M
+
+grep -o 'abc=.....' R4.txt > R4-1.txt #searches a Pattern like "abc=....." Each point represent a NUMBER.
+array=($(tr -d [:alpha:][:punct:] < R4-1.txt))
+#Create Array Variable called 'array'
+#tr extract all Letters and punctuation from R4-1.txt
+M=0;
+# Process each element of the array
+for ((i=0; i<${#array[@]}; i++)); do
+  M1=$(((10#${array[i]}/31) + (10#${array[i]}%31>0)))
+  #10#${array[i]} = transform the value into a base 10 number/ used also for converting text to NUMBER.
+  #M1-is about rouding up each element of array when divided by 31.
+  M=$((M+M1))
+  #M=$((M+$((10#${array[i]}%31))))
+  echo "array[$i]=${array[i]} Col_M=$M"
+done
+echo $M
+
+# to round a number UP
+# answer=$(((3 / 2) + (3 % 2 > 0)))
+
